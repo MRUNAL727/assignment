@@ -1,0 +1,102 @@
+import React, { useState } from 'react';
+import {
+  TextField,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Button,
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
+axios.defaults.withCredentials = true
+
+
+const Login = () => {
+  const navigate = useNavigate();
+  const [data, setData] = useState({
+    email: '',
+    password: '',
+    type: '',
+  });
+  const handleChange = (event) => {
+    setData({ ...data, [event.target.name]: event.target.value });
+  };
+
+  const handleClick = async () => {
+    const response = await axios.post('http://localhost:8000/api/user/login', data, {withCredentials:true})
+     if(response.status === 200)
+     {
+      navigate('/')
+     }
+  };
+  return (
+    <div
+      style={{
+        width: '60%',
+        margin: '50px auto',
+        height: '70vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        boxShadow: '0px 4px 10px rgba(0, 76, 255, 0.212)',
+      }}
+    >
+      <div>
+        <h1 style={{ textAlign: 'center' }}>Login</h1>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <TextField
+            id="outlined-basic"
+            type="email"
+            label="Email"
+            variant="outlined"
+            name="email"
+            onChange={handleChange}
+            style={{ margin: 20, width: 500 }}
+          />
+          <TextField
+            id="outlined-basic"
+            type="password"
+            label="Password"
+            variant="outlined"
+            name="password"
+            onChange={handleChange}
+            style={{ margin: 20 }}
+          />
+        </div>
+
+        <div style={{ margin: 20, width: 500 }}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              name="type"
+              label="Age"
+              onChange={handleChange}
+            >
+              <MenuItem value={'seller'}>Seller</MenuItem>
+              <MenuItem value={'buyer'}>Buyer</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <Button variant="contained" onClick={handleClick}>
+            Login
+          </Button>
+          <Button variant="contained" onClick={() => navigate('/')}>
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
